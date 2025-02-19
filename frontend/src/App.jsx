@@ -12,6 +12,7 @@ import { isAuth } from "./features/authSlice.js"; //
 
 import { useEffect } from "react";
 import Profile from "./pages/Profile.jsx";
+import Posts from "./pages/Posts.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/create-post" element={<Posts />} />
       </Routes>
     </>
   );

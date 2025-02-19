@@ -68,13 +68,13 @@ function Profile() {
     }
   };
 
+  const handleFileChangeForUpdate = (e) => {
+    handleImageUpload(e.target.files[0], "update-profile-pic");
+  };
   const handleFileChangeForUpload = (e) => {
     handleImageUpload(e.target.files[0], "set-profile-pic");
   };
 
-  const handleFileChangeForUpdate = (e) => {
-    handleImageUpload(e.target.files[0], "update-profile-pic");
-  };
   const handleImageUpload = async (image, route) => {
     if (!image) {
       showToast("error", "Please select an image");
@@ -205,7 +205,7 @@ function Profile() {
                 (showFollowersBox || showFollowingBox) && "hidden"
               }`}
             >
-              <div className="m-3">
+              <div className="m-3  h-50 ">
                 {user.profileImage ? (
                   <img
                     src={user.profileImage}
@@ -219,28 +219,37 @@ function Profile() {
                     alt="Profile"
                   />
                 )}
-                <button
-                  onClick={handleEdit}
-                  className="lg:text-xl text-sm lg:mt-2  bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2"
-                >
-                  Edit Profile
-                </button>
+                <div className="flex lg:block flex-col gap-y-2">
+                  <button
+                    onClick={handleEdit}
+                    className="lg:text-xl text-sm lg:mt-2 font-semibold   bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2"
+                  >
+                    Edit Profile
+                  </button>
+
+                  <button
+                    onClick={() => navigate("/create-post")}
+                    className="lg:text-xl lg:hidden text-sm  font-semibold lg:mt-2  bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2"
+                  >
+                    Create Post
+                  </button>
+                </div>
               </div>
-              <div className="  h-20 lg:h-10 text-xl lg:text-2xl  mt-7 lg:mt-3 ">
+              <div className="  h-20 lg:h-10 text-xl lg:text-2xl border-2   mt-7 lg:mt-3 ">
                 <span
-                  className="cursor-pointer font-semibold hover:underline "
+                  className="cursor-pointer font-semibold hover:underline  lg:inline block "
                   onClick={() => setShowFollowersBox(true)}
                 >
                   Followers: {user.followers.length}
                 </span>
                 <span
-                  className="cursor-pointer font-semibold hover:underline lg:px-17 px-3"
+                  className="cursor-pointer font-semibold hover:underline lg:inline block lg:px-17 px-0"
                   onClick={() => setShowFollowingBox(true)}
                 >
                   Following: {user.following.length}
                 </span>
                 {user.bio && (
-                  <div className="hidden h-36 mt-2 overflow-auto lg:block">
+                  <div className="hidden h-36 mt-3 shadow-lg overflow-auto lg:block">
                     <h2 className="text-3xl inline-block font-semibold">
                       Bio:{" "}
                     </h2>

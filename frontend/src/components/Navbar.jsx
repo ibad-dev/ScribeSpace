@@ -83,11 +83,19 @@ function Navbar() {
   return (
     <div className="flex justify-between m-2 gap-x-3">
       {showHamburgerArea === false && (
-        <h1 className="text-3xl lg:text-4xl font-semibold text-black dark:text-white">
-          ScribeSpace
-        </h1>
+        <>
+          <h1 className="text-3xl lg:text-4xl font-semibold text-black dark:text-white">
+            ScribeSpace
+          </h1>
+        </>
       )}
-      <div>
+      <div className="flex ">
+        <button
+          onClick={() => navigate("/create-post")}
+          className="text-xl hidden lg:block bg-blue-600 rounded-md font-semibold hover:bg-blue-700 text-white cursor-pointer w-32 h-12 mx-5 "
+        >
+          Create Post
+        </button>
         <div className="lg:hidden">
           {showHamburgerArea === false && (
             <img
@@ -110,14 +118,15 @@ function Navbar() {
               {isLoggedIn ? (
                 // User has a profile image
                 user.profileImage !== "" ? (
-                  <div className="relative w-32">
+                  <div className="relative w-32 flex">
                     <img
                       src={user.profileImage}
                       width={65}
-                      className="cursor-pointer"
+                      className="cursor-pointer inline-block"
                       onClick={handleProfile}
                       alt="Profile"
                     />
+
                     {showDropdown && (
                       <div className="absolute left-0 mt-2 bg-white border rounded shadow-md w-40">
                         <ul className="text-black">
@@ -204,7 +213,6 @@ function Navbar() {
             <div className="relative hidden lg:block">
               <img
                 src={user.profileImage}
-
                 width={65}
                 className="cursor-pointer rounded-full bg-center bg-no-repeat"
                 onClick={handleProfile}
