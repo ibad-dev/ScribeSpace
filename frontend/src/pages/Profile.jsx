@@ -235,7 +235,7 @@ function Profile() {
                   </button>
                 </div>
               </div>
-              <div className="  h-20 lg:h-10 text-xl lg:text-2xl border-2   mt-7 lg:mt-3 ">
+              <div className="  h-20 lg:h-10 text-xl lg:text-2xl  mt-7 lg:mt-3 ">
                 <span
                   className="cursor-pointer font-semibold hover:underline  lg:inline block "
                   onClick={() => setShowFollowersBox(true)}

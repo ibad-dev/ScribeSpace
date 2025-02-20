@@ -33,7 +33,7 @@ const createPost = asyncHandler(async (req, res) => {
     author: user,
     categories,
     image: imageUrl,
-    published: false, // All posts start as drafts
+    published: true, // All posts start as drafts
   });
 
   return res

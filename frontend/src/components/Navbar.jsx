@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { isAuth } from "../features/authSlice.js";
 import { showToast } from "../utils/toast.js";
 import axios from "axios";
-function Navbar() {
+function Navbar({ fromPost }) {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showHamburgerArea, setShowHamburgerArea] = useState(false);
@@ -17,6 +17,7 @@ function Navbar() {
   const token = localStorage.getItem("access_token");
   useEffect(() => {
     console.log("nav log in", isLoggedIn);
+
     if (isLoggedIn === false) {
       dispatch(isAuth()); // Dispatch the action to check if the user is authenticated
     }
@@ -90,12 +91,14 @@ function Navbar() {
         </>
       )}
       <div className="flex ">
-        <button
-          onClick={() => navigate("/create-post")}
-          className="text-xl hidden lg:block bg-blue-600 rounded-md font-semibold hover:bg-blue-700 text-white cursor-pointer w-32 h-12 mx-5 "
-        >
-          Create Post
-        </button>
+        {isLoggedIn && !fromPost && (
+          <button
+            onClick={() => navigate("/create-post")}
+            className="text-xl hidden lg:block bg-blue-600 rounded-md font-semibold hover:bg-blue-700 text-white cursor-pointer w-32 h-12 mx-5  "
+          >
+            Create Post
+          </button>
+        )}
         <div className="lg:hidden">
           {showHamburgerArea === false && (
             <img
