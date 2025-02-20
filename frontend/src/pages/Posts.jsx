@@ -129,10 +129,26 @@ function Posts() {
 
   return (
     <>
-     
+      <h1 className="lg:text-4xl font-semibold text-blue-800 text-2xl my-2 text-center">
+        Write a New Post
+      </h1>
+      {isLoggedIn === false && (
+        <div className="relative mx-auto p-10  border-2 h-[45vh] shodow-md">
+          <h1 className="lg:text-3xl text-xl font-semibold tracking-tighter">
+            Please Create Account first to write something
+          </h1>
+          <button
+            onClick={() => navigate("/sign-up")}
+            className="outline-none bg-blue-600 hover:bg-blue-800 font-semibold lg:text-2xl text-xl w-70 rounded-lg  p-3 mt-10 text-white"
+          >
+           Create Account
+          </button>
+        </div>
+      )}
+
       {isLoggedIn && (
         <div className="">
-          <div className=" border-2 p-5 flex-col gap-y-3 border-amber-300 lg:w-4xl relative">
+          <div className=" p-5 flex-col gap-y-3  lg:w-4xl relative">
             <form onSubmit={handleSubmit}>
               <label
                 htmlFor="title"
@@ -142,8 +158,9 @@ function Posts() {
               </label>
               <input
                 value={title}
+                placeholder="Write Blog title"
                 onChange={(e) => setTitle(e.target.value)}
-                className=" outline-none mt-3 lg:w-full mb-3 w-80 border-b-2 border-b-gray-600 p-2 text-lg bg-transparent focus:border-blue-500"
+                className=" outline-none  mt-3 lg:w-full mb-3 w-80 border-b-2 border-b-gray-600 p-2 text-lg bg-transparent focus:border-blue-500"
                 type="text"
                 id="title"
                 name="title"
@@ -156,6 +173,7 @@ function Posts() {
               </label>
               <textarea
                 value={content}
+                placeholder="Write Content of Blog"
                 onChange={(e) => setContent(e.target.value)}
                 className="outline-none rounded-md mt-3 lg:w-full h-[45vh] mb-3 w-80 border-2 border-gray-600 p-2 text-lg bg-transparent focus:border-blue-500 resize-none"
                 id="content"
@@ -169,6 +187,7 @@ function Posts() {
               </label>
               <input
                 value={input}
+                placeholder="Add Topics of Blog"
                 onChange={(e) => setInput(e.target.value)}
                 className=" outline-none mt-3 lg:w-full mb-3 w-80 border-b-2 border-b-gray-600 p-2 text-lg bg-transparent focus:border-blue-500"
                 type="text"

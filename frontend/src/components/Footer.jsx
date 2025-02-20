@@ -3,6 +3,7 @@ import { showToast } from "../utils/toast";
 import axios from "axios";
 import { backendUrl } from "../utils/backendURL";
 import { toast } from "react-toastify";
+import { NavLink } from "react-router-dom";
 function Footer() {
   const [email, setEmail] = useState("");
   const handleSub = async () => {
@@ -10,7 +11,7 @@ function Footer() {
       showToast("error", "please write something to subscribe");
     } else {
       try {
-        const response = await axios.post(  
+        const response = await axios.post(
           `${backendUrl}/sub`,
           { email },
           {
@@ -48,24 +49,52 @@ function Footer() {
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="mt-2 space-y-2">
               <li>
-                <a href="/" className="hover:underline">
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? "text-blue-700" : "text-gray-700"
+                    } hover:underline`
+                  }
+                >
                   Home
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="/explore" className="hover:underline">
+                <NavLink
+                  to="/blogs"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? "text-blue-700" : "text-gray-700"
+                    } hover:underline`
+                  }
+                >
                   Explore Blogs
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="/write" className="hover:underline">
+                <NavLink
+                  to="/create-post"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? "text-blue-700" : "text-gray-700"
+                    } hover:underline`
+                  }
+                >
                   Write a Blog
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="/about" className="hover:underline">
+                <NavLink
+                  to="/about"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? "text-blue-700" : "text-gray-700"
+                    } hover:underline`
+                  }
+                >
                   About Us
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -104,7 +133,7 @@ function Footer() {
             />
             <button
               onClick={handleSub}
-              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              className="mt-2 cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
             >
               Subscribe
             </button>

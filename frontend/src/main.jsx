@@ -17,6 +17,8 @@ import VerifyEmail from "./pages/VerifyEmail.jsx";
 import Profile from "./pages/Profile.jsx";
 import Posts from "./pages/Posts.jsx";
 import Blogs from "./pages/Blogs.jsx";
+import About from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -27,6 +29,8 @@ const router = createBrowserRouter(
       <Route path="/profile" element={<Profile />} />
       <Route path="/create-post" element={<Posts />} />
       <Route path="/blogs" element={<Blogs />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
     </Route>
   )
 );

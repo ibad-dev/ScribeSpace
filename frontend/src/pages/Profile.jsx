@@ -201,7 +201,7 @@ function Profile() {
         {showEditBox === false ? (
           <>
             <div
-              className={`flex border-amber-500 border-2 h-screen lg:w-xl ${
+              className={`flex border-amber-500 border-2 h-screen  ${
                 (showFollowersBox || showFollowingBox) && "hidden"
               }`}
             >
@@ -222,7 +222,7 @@ function Profile() {
                 <div className="flex lg:block flex-col gap-y-2">
                   <button
                     onClick={handleEdit}
-                    className="lg:text-xl text-sm lg:mt-2 font-semibold   bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2"
+                    className="lg:text-xl text-sm mt-2 font-semibold   bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2"
                   >
                     Edit Profile
                   </button>
@@ -249,11 +249,11 @@ function Profile() {
                   Following: {user.following.length}
                 </span>
                 {user.bio && (
-                  <div className="hidden h-36 mt-3 shadow-lg overflow-auto lg:block">
-                    <h2 className="text-3xl inline-block font-semibold">
+                  <div className=" h-36 mt-3 shadow-lg hidden lg:w-96 overflow-auto p-2 lg:block">
+                    <h2 className="lg:text-3xl texl-lg inline-block  font-semibold">
                       Bio:{" "}
                     </h2>
-                    <span className="ml-3">{user.bio} </span>
+                    <span className="ml-3 lg:text-lg text-sm" >{user.bio} </span>
                   </div>
                 )}
               </div>
@@ -285,6 +285,14 @@ function Profile() {
                 </div>
               </div>
             )}
+            {user.bio && (
+                  <div className=" h-36 mt-3 shadow-lg lg:hidden lg:w-96 overflow-auto p-2 block">
+                    <h2 className="lg:text-3xl texl-lg inline-block  font-semibold">
+                      Bio:{" "}
+                    </h2>
+                    <span className="ml-3 lg:text-lg text-sm" >{user.bio} </span>
+                  </div>
+                )}
           </>
         ) : (
           <div className="flex h-screen w-lg  border-b-blue-800">

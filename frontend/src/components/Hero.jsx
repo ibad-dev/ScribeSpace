@@ -16,14 +16,14 @@ function Hero() {
 
           <div className="mt-6">
             <button
-              onClick={() => navigate("/sign-up")}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-700"
-            >
+              onClick={() => navigate("/create-post")}
+              className="bg-blue-600 text-white cursor-pointer px-6 py-3 rounded-lg text-lg hover:bg-blue-700"
+            > 
               Start Writing
             </button>
             <button
               onClick={() => navigate("/blogs")}
-              className="bg-gray-300 text-gray-800 px-6 py-3 rounded-lg text-lg ml-4 hover:bg-gray-400"
+              className="bg-gray-300 text-gray-800 cursor-pointer px-6 py-3 rounded-lg text-lg ml-4 hover:bg-gray-400"
             >
               Explore Blogs
             </button>
