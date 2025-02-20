@@ -91,7 +91,7 @@ function Navbar({ fromPost }) {
         </>
       )}
       <div className="flex ">
-        {isLoggedIn && !fromPost && (
+        {isLoggedIn && (
           <button
             onClick={() => navigate("/create-post")}
             className="text-xl hidden lg:block bg-blue-600 rounded-md font-semibold hover:bg-blue-700 text-white cursor-pointer w-32 h-12 mx-5  "

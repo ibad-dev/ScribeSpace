@@ -88,9 +88,7 @@ function ResetPassword() {
   return (
 
     <>
-    <h1 className="text-3xl m-2 lg:text-4xl font-semibold dark:text-white ">
-        ScribeSpace
-      </h1>
+   
     <div className="flex items-center gap-5 justify-center mt-20">
      
       {!isEmailSent && (

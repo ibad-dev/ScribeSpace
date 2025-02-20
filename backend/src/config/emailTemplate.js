@@ -217,3 +217,74 @@ export const PASSWORD_RESET_TEMPLATE = `
 </body>
 </html>
 `;
+export const NEWSLETTER_SUBSCRIPTION_TEMPLATE = `
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Welcome to ScribeSpace Newsletter</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #E5E5E5;
+    }
+
+    table, td {
+      border-collapse: collapse;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      margin: 70px 0px;
+      background-color: #ffffff;
+    }
+
+    .main-content {
+      padding: 48px 30px 40px;
+      color: #000000;
+    }
+
+    @media only screen and (max-width: 480px) {
+      .container {
+        width: 80% !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="#F6FAFB">
+    <tbody>
+      <tr>
+        <td valign="top" align="center">
+          <table class="container" width="600" cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+              <tr>
+                <td class="main-content">
+                  <h1 style="font-size: 24px; line-height: 150%; font-weight: bold; padding: 0 0 16px;">
+                    ScribeSpace
+                  </h1>
+                  <p style="font-size: 14px; line-height: 150%; padding: 0 0 24px;">
+                    Thank you for subscribing to our newsletter! You'll now receive amazing articles and blogs from ScribeSpace, delivered right to your inbox.
+                  </p>
+                  <p style="font-size: 14px; line-height: 150%; padding: 0 0 16px;">
+                    We're excited to share our content with you and hope you enjoy the ride!
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
+`;

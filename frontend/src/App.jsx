@@ -1,18 +1,14 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home.jsx";
-import SignUp from "./pages/SignUp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import VerifyEmail from "./pages/VerifyEmail";
-import ResetPassword from "./pages/ResetPassword";
+
 import { useDispatch, useSelector } from "react-redux";
 import { isAuth } from "./features/authSlice.js"; //
-
-// import the isAuth action
+import { Outlet } from "react-router-dom";
 
 import { useEffect } from "react";
-import Profile from "./pages/Profile.jsx";
-import Posts from "./pages/Posts.jsx";
+
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,14 +29,9 @@ function App() {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/create-post" element={<Posts />} />
-      </Routes>
+      <Navbar />
+      <Outlet />
+      <Footer />
     </>
   );
 }

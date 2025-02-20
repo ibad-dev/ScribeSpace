@@ -129,7 +129,7 @@ function Posts() {
 
   return (
     <>
-      <Navbar fromPost={true} />
+     
       {isLoggedIn && (
         <div className="">
           <div className=" border-2 p-5 flex-col gap-y-3 border-amber-300 lg:w-4xl relative">

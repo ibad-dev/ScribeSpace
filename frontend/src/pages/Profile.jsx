@@ -182,7 +182,7 @@ function Profile() {
   };
   return (
     <>
-      <Navbar />
+     
       <div className="flex flex-col lg:flex-row w-screen h-screen">
         {/* Left Section */}
         <div className="lg:flex hidden flex-col border-green-500 border-2 h-screen lg:w-3xl">

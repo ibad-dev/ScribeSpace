@@ -79,9 +79,6 @@ function SignUp() {
 
   return (
     <div className="m-2 box-border">
-      <h1 className="text-3xl lg:text-4xl font-semibold dark:text-white ">
-        ScribeSpace
-      </h1>
       <div className="flex mt-10 flex-col items-center justify-center ">
         <h2 className=" text-3xl lg:text-5xl font-semibold ">
           {state === "Sign Up" ? "Sign Up" : "Log In"}

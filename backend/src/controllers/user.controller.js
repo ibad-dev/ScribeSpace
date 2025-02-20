@@ -198,7 +198,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   const user = await User.findById(req.user?._id);
-  
+
   const isPasswordValid = await user.isPasswordCorrect(oldPassword);
   if (!isPasswordValid) {
     throw new ApiError(401, 'old password is incorrect');
@@ -251,7 +251,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   const mailOptions = {
-    from: `"Your App Name" <${process.env.SENDER_EMAIL}>`,
+    from: `"ScribeSpace <${process.env.SENDER_EMAIL}>`,
     to: user.email,
     subject: 'Verify your email',
     html: EMAIL_VERIFY_TEMPLATE.replace('{{otp}}', otp).replace(
@@ -338,7 +338,7 @@ const sendResetOtp = asyncHandler(async (req, res) => {
   user.resetOtpExpiredAt = Date.now() + 10 * 60 * 1000;
   await user.save({ validateBeforeSave: false });
   const mailOptions = {
-    from: process.env.SENDER_EMAIL,
+    from: `ScribeSpace <${process.env.SENDER_EMAIL}>`,
     to: email,
     subject: 'Reset your password',
     html: PASSWORD_RESET_TEMPLATE.replace('{{otp}}', otp).replace(
@@ -552,7 +552,9 @@ const toggleFollow = asyncHandler(async (req, res) => {
 //method to get followers of a user :
 const getFollowers = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  const user = await User.findById(userId).select('followers profileImage username');
+  const user = await User.findById(userId).select(
+    'followers profileImage username'
+  );
   if (!user) {
     throw new ApiError(404, 'User not found');
   }
@@ -574,7 +576,9 @@ const getFollowers = asyncHandler(async (req, res) => {
 //method to get following of a user :
 const getFollowing = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  const user = await User.findById(userId).select('following profileImage username');
+  const user = await User.findById(userId).select(
+    'following profileImage username'
+  );
   if (!user) {
     throw new ApiError(404, 'User not found');
   }

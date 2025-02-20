@@ -29,6 +29,7 @@ import postRouter from './routes/post.route.js';
 import bookmarkRouter from './routes/bookmark.route.js';
 import likeRouter from './routes/likes.route.js';
 import viewRouter from './routes/views.route.js';
+import NewsLetterRouter from './routes/newsLetter.route.js';
 import commentRouter from './routes/comment.route.js';
 //api routes
 app.use('/api/v1/users', userRouter);
@@ -37,4 +38,6 @@ app.use('/api/v1/bookmarks', bookmarkRouter);
 app.use('/api/v1/likes', likeRouter);
 app.use('/api/v1/views', viewRouter);
 app.use('/api/v1/comments', commentRouter);
+app.use('/api/v1/sub', NewsLetterRouter);
+
 export { app };

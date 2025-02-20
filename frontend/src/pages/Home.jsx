@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import Navbar from "../components/Navbar.jsx";
-
+import Footer from "../components/Footer.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { isAuth } from "../features/authSlice.js";
+import Hero from "../components/Hero.jsx";
 
 function Home() {
   const dispatch = useDispatch();
@@ -10,8 +11,7 @@ function Home() {
 
   return (
     <div>
-      <Navbar />
-      {/* Render based on auth status */}
+      <Hero />
     </div>
   );
 }
