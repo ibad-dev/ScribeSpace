@@ -6,8 +6,12 @@ import { isAuth } from "../features/authSlice.js";
 import { showToast } from "../utils/toast.js";
 import axios from "axios";
 import { backendUrl } from "../utils/backendURL.js";
-import Navbar from "../components/Navbar.jsx";
-
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import Heading from "@tiptap/extension-heading";
 function Posts() {
   const navigate = useNavigate();
   const { isLoading, isLoggedIn, user } = useSelector((state) => state.auth);
@@ -69,8 +73,8 @@ function Posts() {
 
   const postBlog = async () => {
     try {
-      const response = await axios.post(
-        `${backendUrl}/posts/create-post`,
+      const response = await axios.post(`
+        ${backendUrl}/posts/create-post`,
         {
           tags,
           title,
@@ -104,8 +108,8 @@ function Posts() {
     formData.append("content", content);
 
     try {
-      const response = await axios.post(
-        `${backendUrl}/posts/create-post`,
+      const response = await axios.post(`
+        ${backendUrl}/posts/create-post`,
         formData,
         {
           headers: {
@@ -126,6 +130,29 @@ function Posts() {
       showToast("error", error.message);
     }
   };
+// TipTap Editor Initialization
+const editor = useEditor({
+  extensions: [
+    StarterKit,
+    BulletList,
+    OrderedList,
+    ListItem,
+    Heading.configure({ levels: [1, 2, 3] }) // Allow H1, H2, H3
+  ],
+  content: "",
+  editorProps: {
+    attributes: {
+      class: "outline-none focus:ring-0 min-h-[200px] p-3", // Ensure focus styling
+    },
+  },
+  onUpdate: ({ editor }) => {
+    setContent(editor.getHTML());
+  },
+});
+
+console.log("editor: ",editor)
+console.log("content: ",content)
+
 
   return (
     <>
@@ -148,7 +175,7 @@ function Posts() {
 
       {isLoggedIn && (
         <div className="">
-          <div className=" p-5 flex-col gap-y-3  lg:w-4xl relative">
+          <div className=" p-5 flex-col gap-y-3  tiptap lg:w-4xl relative">
             <form onSubmit={handleSubmit}>
               <label
                 htmlFor="title"
@@ -171,14 +198,89 @@ function Posts() {
               >
                 Content:
               </label>
-              <textarea
-                value={content}
-                placeholder="Write Content of Blog"
-                onChange={(e) => setContent(e.target.value)}
-                className="outline-none rounded-md mt-3 lg:w-full h-[45vh] mb-3 w-80 border-2 border-gray-600 p-2 text-lg bg-transparent focus:border-blue-500 resize-none"
-                id="content"
-                name="content"
-              />
+              <div className="border-2 border-gray-600 p-3 rounded-md">
+            {/* Toolbar */}
+            <div className="flex gap-2 mb-2 flex-wrap">
+              <button
+                type="button"
+                className={`px-3 py-1 rounded-md ${
+                  editor?.isActive("bold") ? "bg-blue-400 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => editor.chain().focus().toggleBold().run()}
+              >
+                Bold
+              </button>
+
+              <button
+                type="button"
+                className={`px-3 py-1 rounded-md ${
+                  editor?.isActive("italic") ? "bg-blue-400 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => editor.chain().focus().toggleItalic().run()}
+              >
+                Italic
+              </button>
+
+              <button
+                type="button"
+                className={`px-3 py-1 rounded-md ${
+                  editor?.isActive("heading", { level: 1 }) ? "bg-blue-400 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              >
+                H1
+              </button>
+              <button
+                type="button"
+                className={`px-3 py-1 rounded-md ${
+                  editor?.isActive("heading", { level: 2 }) ? "bg-blue-400 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+              >
+                H2
+              </button>
+              <button
+                type="button"
+                className={`px-3 py-1 rounded-md ${
+                  editor?.isActive("heading", { level: 3 }) ? "bg-blue-400 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+              >
+                H3
+              </button>
+
+              <button
+                type="button"
+                className={`px-3 py-1 rounded-md ${
+                  editor?.isActive("bulletList") ? "bg-blue-400 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+              >
+                • Bullet List
+              </button>
+
+              <button
+                type="button"
+                className={`px-3 py-1 rounded-md ${
+                  editor?.isActive("orderedList") ? "bg-blue-400 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              >
+                1,2,3 List
+              </button>
+            </div>
+
+            {/* TipTap Editor Content */}
+            {editor && <EditorContent editor={editor} className="border p-3 min-h-[200px]" />}
+
+          </div>
+
+
+
+
+
+
+
               <label
                 htmlFor="categories"
                 className="lg:text-2xl text-lg font-semibold"

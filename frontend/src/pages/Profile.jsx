@@ -287,7 +287,7 @@ function Profile() {
             )}
             {user.bio && (
                   <div className=" h-36 mt-3 shadow-lg lg:hidden lg:w-96 overflow-auto p-2 block">
-                    <h2 className="lg:text-3xl texl-lg inline-block  font-semibold">
+                    <h2 className="lg:text-2xl  texl-lg inline-block  font-semibold">
                       Bio:{" "}
                     </h2>
                     <span className="ml-3 lg:text-lg text-sm" >{user.bio} </span>

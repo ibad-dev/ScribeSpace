@@ -214,7 +214,7 @@ function Navbar({ fromPost }) {
                           <ul className="text-black">
                             <li
                               className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                              onClick={() => navigate("/profile")}
+                              onClick={() =>navigate("/profile") && showDropdown(false)}
                             >
                               View Profile
                             </li>
@@ -306,7 +306,7 @@ function Navbar({ fromPost }) {
                   <ul className="text-black">
                     <li
                       className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                      onClick={() => navigate("/profile")}
+                      onClick={() => navigate("/profile")&& showDropdown(false)}
                     >
                       View Profile
                     </li>
