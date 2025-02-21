@@ -19,7 +19,7 @@ import Posts from "./pages/Posts.jsx";
 import Blogs from "./pages/Blogs.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
-
+import PublishedBlogs from "./components/PublishedBlogs.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -27,7 +27,9 @@ const router = createBrowserRouter(
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile" element={<Profile />}>
+        <Route path="published-blogs" element={<PublishedBlogs />} />
+      </Route>
       <Route path="/create-post" element={<Posts />} />
       <Route path="/blogs" element={<Blogs />} />
       <Route path="/about" element={<About />} />

@@ -14,6 +14,7 @@ import ListItem from "@tiptap/extension-list-item";
 import Heading from "@tiptap/extension-heading";
 function Posts() {
   const navigate = useNavigate();
+  const[IsLoading,SetIsLoading]  = useState(true) 
   const { isLoading, isLoggedIn, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -398,7 +399,7 @@ function Posts() {
                 type="submit"
                 className="lg:text-xl text-sm font-semibold lg:mt-4 mt-9 right-4 lg:absolute bottom-4 bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2 w-full lg:w-40"
               >
-                Post{" "}
+                {IsLoading===false?"Posting":"Post"}
               </button>
               <button
                 type="submit"
@@ -407,7 +408,7 @@ function Posts() {
                 }}
                 className="lg:text-xl text-sm font-semibold lg:mt-6 mt-9 right-45 lg:absolute bottom-4 bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2 w-full lg:w-60"
               >
-                Save as draft
+                {IsLoading===false?"Saving":"Save as draft"}
               </button>
             </form>
           </div>

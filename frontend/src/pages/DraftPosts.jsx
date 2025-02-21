@@ -5,16 +5,34 @@ import axios from "axios";
 import { backendUrl } from "../utils/backendURL.js";
 import { useNavigate } from "react-router-dom";
 
-function PostsBox() {
+function DraftPosts() {
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
 
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const publishPost = async (postId) => {
+    console.log(postId);
+    try {
+      axios.defaults.withCredentials = true;
+      const { data } = await axios.post(
+        `${backendUrl}/posts/publish/${postId}`,
+        {}
+      );
+      if (data) {
+        showToast("success", data.message);
+      } else {
+        showToast("error", data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      showToast("error", "Error to publish");
+    }
+  };
   const fetchPublishedPosts = async () => {
     try {
       const response = await axios.get(
-        `${backendUrl}/posts/published-posts`,
+        `${backendUrl}/posts/saved-posts`,
 
         {
           headers: {
@@ -46,7 +64,7 @@ function PostsBox() {
       ) : (
         <div className=" lg:m-3">
           <h1 className="lg:hidden text-3xl text-center my-2 font-semibold tracking-tighter">
-            Published Posts
+            Saved Posts
           </h1>
           <p className="lg:text-3xl text-xl font-medium tracking-tight">
             Total Blogs: {response?.data?.postCount}
@@ -57,7 +75,7 @@ function PostsBox() {
               className="lg:flex block lg:my-4 my-3 gap-y-3 gap-x-2 shadow-md   p-1 lg:p-4"
             >
               <div
-                className="flex lg:flex-col  lg:justify-normal justify-between cursor-pointer lg:w-[40vw]"
+                className="flex lg:flex-col  lg:justify-normal cursor-pointer justify-between lg:w-[40vw]"
                 onClick={() => navigate("/profile/published-blogs")}
               >
                 <div className="flex gap-x-12 items-center ">
@@ -93,12 +111,29 @@ function PostsBox() {
                 Explicabo amet sapiente debitis ab tempore unde laborum. Dolorem
                 ea corporis quod laborum esse?
               </h1>
-
-              <img
-                src={res.image}
-                className="lg:w-40 lg:h-40 hidden lg:block bg-center rounded-lg w-20 h-20"
-                alt=""
-              />
+              <button
+                onClick={() => {
+                  publishPost(res._id);
+                }}
+                className="lg:text-xl text-sm mt-2 lg:hidden font-semibold   bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer py-2 w-32 "
+              >
+                Publish
+              </button>
+              <div>
+                <img
+                  src={res.image}
+                  className="lg:w-40 lg:h-40 hidden lg:block bg-center rounded-lg w-20 h-20"
+                  alt=""
+                />
+                <button
+                  onClick={() => {
+                    publishPost(res?._id);
+                  }}
+                  className="lg:text-xl text-sm mt-2 lg:block hidden font-semibold   bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer py-2 w-40 "
+                >
+                  Publish
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -107,4 +142,4 @@ function PostsBox() {
   );
 }
 
-export default PostsBox;
+export default DraftPosts;

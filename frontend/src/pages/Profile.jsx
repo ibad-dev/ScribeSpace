@@ -6,14 +6,14 @@ import { isAuth } from "../features/authSlice.js";
 import { showToast } from "../utils/toast.js";
 import axios from "axios";
 import { backendUrl } from "../utils/backendURL.js";
-import Navbar from "../components/Navbar.jsx";
+import DraftPosts from "./DraftPosts.jsx";
 import Followers from "../components/Followers.jsx";
 import Following from "../components/Following.jsx";
 import PostsBox from "../components/PostsBox.jsx";
 function Profile() {
   const [showFollowersBox, setShowFollowersBox] = useState(false);
   const [showFollowingBox, setShowFollowingBox] = useState(false);
-
+  const [showDraft, setShowDraft] = useState(false);
   const [bio, setBio] = useState("");
   const [username, setUsername] = useState("");
   const [fullName, SetFullName] = useState("");
@@ -46,26 +46,31 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios.defaults.withCredentials = true;
-    try {
-      const { data } = await axios.patch(
-        `${backendUrl}/users/update-account-details`,
-        {
-          username,
-          bio,
-          fullName,
+    if (username === "" && fullName === "" && bio === "") {
+      showToast("error", "All Fields can't be empty");
+    } else {
+      try {
+        const { data } = await axios.patch(
+          `${backendUrl}/users/update-account-details`,
+          {
+            username,
+            bio,
+            fullName,
+          }
+        );
+        if (data) {
+          navigate("/profile");
+          showToast("success", "Account updated Successfully");
+        } else {
+          showToast("error", data.message || "Error To update User");
         }
-      );
-      if (data) {
-        navigate("/profile");
-        showToast("success", "Account updated Successfully");
-      } else {
-        showToast("error", data.message || "Error To update User");
+      } catch (error) {
+        showToast(
+          "error",
+          error.response?.data?.message ||
+            "An error occurred during registration"
+        );
       }
-    } catch (error) {
-      showToast(
-        "error",
-        error.response?.data?.message || "An error occurred during registration"
-      );
     }
   };
 
@@ -115,12 +120,15 @@ function Profile() {
 
     const token = localStorage.getItem("access_token");
     try {
-      const response = await axios.post(`${backendUrl}/users/add-bio`, bio, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${backendUrl}/users/add-bio`,
+        { bio },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response) {
         showToast("success", response.data.message);
         navigate("/profile");
@@ -186,35 +194,44 @@ function Profile() {
     <>
       <div
         className={`flex flex-col ${
-          showEditBox && "lg:h-[160vh] h-[240vh]"
+          showEditBox && "lg:h-[140vh] h-[240vh]"
         } lg:flex-row w-screen`}
       >
         {/* Left Section */}
-        <div className="lg:flex hidden flex-col border-green-500  border-2 h-screen lg:w-3xl">
-          <h1 className="text-2xl lg:text-5xl p-5 capitalize">
+        <div className="lg:flex hidden flex-col  overflow-auto lg:h-[133vh]  lg:w-3xl">
+          <h1 className="text-2xl flex justify-between lg:text-5xl p-5 capitalize">
             {user.fullName}
+            <button
+              onClick={() => {
+                setShowDraft((prev) => !prev);
+              }}
+              className="lg:text-xl text-sm mt-2 font-semibold   bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer py-2 w-32 "
+            >
+              {showDraft ? "Published" : "Drafts"}
+            </button>
           </h1>
+
           <div>
             <h2 className="text-2xl tracking-tighter lg:text-4xl font-semibold p-5">
-              Published Blogs:
+              {showDraft ? "Saved Blogs" : "Published Blogs"}
             </h2>
-            <div className="posts border-1">
-              <PostsBox userid={user._id} />{" "}
+            <div className="">
+              {showDraft === false ? <PostsBox /> : <DraftPosts  />}
             </div>
           </div>
         </div>
 
         {/* Right Section */}
 
-        <div className="">
+        <div className="m-1">
           {showEditBox === false ? (
             <>
               <div
-                className={`flex border-amber-500 border-2 h-screen  ${
+                className={`flex  ${
                   (showFollowersBox || showFollowingBox) && "hidden"
                 }`}
               >
-                <div className="m-3  h-50 ">
+                <div className=" h-50 ">
                   {user.profileImage ? (
                     <img
                       src={user.profileImage}
@@ -283,7 +300,7 @@ function Profile() {
                 </div>
               )}
               {showFollowingBox && (
-                <div className="border-2 lg:w-lg relative">
+                <div className=" lg:w-lg relative">
                   <img
                     src={assets.close}
                     onClick={() => setShowFollowingBox(false)}
@@ -297,7 +314,7 @@ function Profile() {
                 </div>
               )}
               {user.bio && (
-                <div className=" h-36 mt-3 shadow-lg lg:hidden lg:w-96 overflow-auto p-2 block">
+                <div className=" h-36 my-3 mx-2 shadow-lg lg:hidden lg:w-96 overflow-auto p-2 block">
                   <h2 className="lg:text-2xl  texl-lg inline-block  font-semibold">
                     Bio:{" "}
                   </h2>
@@ -306,7 +323,9 @@ function Profile() {
               )}
             </>
           ) : (
-            <div className="flex h-screen w-lg   border-b-blue-800">
+            <div
+              className={` flex lg:h-screen w-lg  h-[242vh]   border-b-blue-800`}
+            >
               <div className="m-4 relative">
                 <img
                   src={assets.close}
@@ -341,7 +360,7 @@ function Profile() {
                   <div>
                     <img
                       src={user.profileImage}
-                      className="cursor-pointer w-28 h-28 rounded-full"
+                      className="cursor-pointer w-28 h-28 mb-3 rounded-full"
                       alt="Profile"
                     />
 
@@ -500,6 +519,17 @@ function Profile() {
               </div>
             </div>
           )}
+        </div>
+        <div className="border-2 overflow-auto lg:hidden">
+        <button
+              onClick={() => {
+                setShowDraft((prev) => !prev);
+              }}
+              className="lg:text-xl text-sm mt-2 font-semibold   bg-blue-600 rounded-lg hover:bg-blue-700 text-white cursor-pointer mx-2   py-2 w-24 "
+            >
+              {showDraft ? "Published" : "Drafts"}
+            </button>
+          {showDraft === false ? <PostsBox /> : <DraftPosts />}
         </div>
       </div>
     </>

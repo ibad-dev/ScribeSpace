@@ -478,17 +478,33 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   const { username, fullName, bio } = req.body;
   const userid = req.user._id;
   const user = await User.findById(userid);
+
   if (!user) {
     throw new ApiError(404, 'User not found');
   }
+
   try {
-    user.username = username;
-    user.bio = bio;
-    user.fullName = fullName;
-    await user.save({ validateBeforeSave: false });
+    const updatedUser = await User.findByIdAndUpdate(
+      userid,
+      {
+        $set: {
+          username: username || user.username,
+          fullName: fullName || user.fullName,
+          bio: bio || user.bio,
+        },
+      },
+      { new: true }
+    );
+
     return res
       .status(200)
-      .json(new ApiResponse(200, user, 'Account details updated successfully'));
+      .json(
+        new ApiResponse(
+          200,
+          updatedUser,
+          'Account details updated successfully'
+        )
+      );
   } catch (error) {
     throw new ApiError(400, 'Error updating account details');
   }
@@ -496,6 +512,9 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const addBio = asyncHandler(async (req, res) => {
   const { bio } = req.body;
+  if (bio === '' || !bio) {
+    throw new ApiError(400, 'Bio is Required');
+  }
   const userid = req.user._id;
   const user = await User.findById(userid);
   if (!user) {

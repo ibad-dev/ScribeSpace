@@ -191,6 +191,36 @@ const getPublishedPostsByUser = asyncHandler(async (req, res) => {
     )
   );
 });
+const getSavedPostsByUser = asyncHandler(async (req, res) => {
+  const userid = req.user._id;
+  const { page = 1, limit = 10 } = req.query;
+
+  const posts = await Post.find({
+    published: false,
+    author: userid,
+  })
+    .select('title content categories image author')
+    .populate('author', 'username profileImage')
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(parseInt(limit));
+
+  const postCount = await Post.countDocuments({
+    published: false,
+    author: userid,
+  });
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        postCount,
+        posts,
+      },
+      'Saved posts fetched successfully'
+    )
+  );
+});
 
 const publishPost = asyncHandler(async (req, res) => {
   const { postId } = req.params;
@@ -229,4 +259,12 @@ const publishPost = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, post, 'Post published successfully'));
 });
 
-export { updatePost, deletePost, createPostAndDraft, createPostAndPublish, getPublishedPostsByUser, publishPost };
+export {
+  updatePost,
+  deletePost,
+  createPostAndDraft,
+  createPostAndPublish,
+  getPublishedPostsByUser,
+  publishPost,
+  getSavedPostsByUser
+};
