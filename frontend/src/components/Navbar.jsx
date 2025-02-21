@@ -21,6 +21,7 @@ function Navbar({ fromPost }) {
       dispatch(isAuth()); // Dispatch the action to check if the user is authenticated
     }
   }, [dispatch, isLoggedIn]);
+ 
 
   const handleProfile = () => {
     setShowDropdown((prevState) => !prevState); // Toggle dropdown visibility
@@ -47,7 +48,7 @@ function Navbar({ fromPost }) {
     }
   }
 
-  console.log("user data:", user); // Check if the user is populated
+  // console.log("user data:", user); // Check if the user is populated
   const sendVerifyEmail = async () => {
     try {
       const { data } = await axios.post(
@@ -173,14 +174,20 @@ function Navbar({ fromPost }) {
                           <ul className="text-black">
                             <li
                               className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                              onClick={() => navigate("/profile")}
+                              onClick={() => {
+                                navigate("/profile");
+                                setShowDropdown(false);
+                              }}
                             >
                               View Profile
                             </li>
                             {!user.isAccountVerified && (
                               <li
                                 className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                                onClick={sendVerifyEmail}
+                                onClick={() => {
+                                  sendVerifyEmail();
+                                  setShowDropdown(false);
+                                }}
                               >
                                 Verify Email
                               </li>
@@ -214,21 +221,30 @@ function Navbar({ fromPost }) {
                           <ul className="text-black">
                             <li
                               className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                              onClick={() =>navigate("/profile") && showDropdown(false)}
+                              onClick={() => {
+                                navigate("/profile");
+                                setShowDropdown(false);
+                              }}
                             >
                               View Profile
                             </li>
                             {!user.isAccountVerified && (
                               <li
                                 className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                                onClick={sendVerifyEmail}
+                                onClick={() => {
+                                  sendVerifyEmail();
+                                  setShowDropdown(false);
+                                }}
                               >
                                 Verify Email
                               </li>
                             )}
                             <li
                               className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                              onClick={logout}
+                              onClick={() => {
+                                logout();
+                                setShowDropdown(false);
+                              }}
                             >
                               Log Out
                             </li>
@@ -306,7 +322,8 @@ function Navbar({ fromPost }) {
                   <ul className="text-black">
                     <li
                       className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                      onClick={() => navigate("/profile")&& showDropdown(false)}
+                      onClick={() =>{navigate("/profile") 
+                        setShowDropdown(false)}}
                     >
                       View Profile
                     </li>

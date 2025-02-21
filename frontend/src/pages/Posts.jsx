@@ -29,7 +29,7 @@ function Posts() {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null); // Store image in state
-
+  const [draft, setDraft] = useState(false);
   const [tags, setTags] = useState([]);
   const [input, setInput] = useState("");
 
@@ -73,21 +73,42 @@ function Posts() {
 
   const postBlog = async () => {
     try {
-      const response = await axios.post(`
-        ${backendUrl}/posts/create-post`,
-        {
-          tags,
-          title,
-          content,
-        },
-        { withCredentials: true }
-      );
+      if (draft === false) {
+        const response = await axios.post(
+          `
+        ${backendUrl}/posts/create-post/publish`,
+          {
+            tags,
+            title,
+            content,
+          },
+          { withCredentials: true }
+        );
 
-      if (response) {
-        showToast("success", response.data.message);
-        navigate("/profile");
+        if (response) {
+          showToast("success", response.data.message);
+          navigate("/profile");
+        } else {
+          showToast("error", response.data.message);
+        }
       } else {
-        showToast("error", response.data.message);
+        const response = await axios.post(
+          `
+            ${backendUrl}/posts/create-post/save-as-draft`,
+          {
+            tags,
+            title,
+            content,
+          },
+          { withCredentials: true }
+        );
+
+        if (response) {
+          showToast("success", response.data.message);
+          navigate("/profile");
+        } else {
+          showToast("error", response.data.message);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -108,51 +129,67 @@ function Posts() {
     formData.append("content", content);
 
     try {
-      const response = await axios.post(`
-        ${backendUrl}/posts/create-post`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
+      if (draft === false) {
+        const response = await axios.post(
+          `
+        ${backendUrl}/posts/create-post/publish`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response) {
+          showToast("success", response.data.message);
+          navigate("/profile");
+        } else {
+          showToast("error", response.data.message);
         }
-      );
-
-      if (response) {
-        showToast("success", response.data.message);
-        navigate("/profile");
       } else {
-        showToast("error", response.data.message);
+        const response = await axios.post(
+          `
+        ${backendUrl}/posts/create-post/save-as-draft`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response) {
+          showToast("success", response.data.message);
+          navigate("/profile");
+        } else {
+          showToast("error", response.data.message);
+        }
       }
     } catch (error) {
       console.error(error);
       showToast("error", error.message);
     }
   };
-// TipTap Editor Initialization
-const editor = useEditor({
-  extensions: [
-    StarterKit,
-    BulletList,
-    OrderedList,
-    ListItem,
-    Heading.configure({ levels: [1, 2, 3] }) // Allow H1, H2, H3
-  ],
-  content: "",
-  editorProps: {
-    attributes: {
-      class: "outline-none focus:ring-0 min-h-[200px] p-3", // Ensure focus styling
+  // TipTap Editor Initialization
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      BulletList,
+      OrderedList,
+      ListItem,
+      Heading.configure({ levels: [1, 2, 3] }), // Allow H1, H2, H3
+    ],
+    content: "",
+    editorProps: {
+      attributes: {
+        class: "outline-none focus:ring-0 min-h-[200px] p-3", // Ensure focus styling
+      },
     },
-  },
-  onUpdate: ({ editor }) => {
-    setContent(editor.getHTML());
-  },
-});
-
-console.log("editor: ",editor)
-console.log("content: ",content)
-
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML());
+    },
+  });
 
   return (
     <>
@@ -168,7 +205,7 @@ console.log("content: ",content)
             onClick={() => navigate("/sign-up")}
             className="outline-none bg-blue-600 hover:bg-blue-800 font-semibold lg:text-2xl text-xl w-70 rounded-lg  p-3 mt-10 text-white"
           >
-           Create Account
+            Create Account
           </button>
         </div>
       )}
@@ -199,87 +236,109 @@ console.log("content: ",content)
                 Content:
               </label>
               <div className="border-2 border-gray-600 p-3 rounded-md">
-            {/* Toolbar */}
-            <div className="flex gap-2 mb-2 flex-wrap">
-              <button
-                type="button"
-                className={`px-3 py-1 rounded-md ${
-                  editor?.isActive("bold") ? "bg-blue-400 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => editor.chain().focus().toggleBold().run()}
-              >
-                Bold
-              </button>
+                {/* Toolbar */}
+                <div className="flex gap-2 mb-2 flex-wrap">
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded-md ${
+                      editor?.isActive("bold")
+                        ? "bg-blue-400 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => editor.chain().focus().toggleBold().run()}
+                  >
+                    Bold
+                  </button>
 
-              <button
-                type="button"
-                className={`px-3 py-1 rounded-md ${
-                  editor?.isActive("italic") ? "bg-blue-400 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-              >
-                Italic
-              </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded-md ${
+                      editor?.isActive("italic")
+                        ? "bg-blue-400 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                  >
+                    Italic
+                  </button>
 
-              <button
-                type="button"
-                className={`px-3 py-1 rounded-md ${
-                  editor?.isActive("heading", { level: 1 }) ? "bg-blue-400 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-              >
-                H1
-              </button>
-              <button
-                type="button"
-                className={`px-3 py-1 rounded-md ${
-                  editor?.isActive("heading", { level: 2 }) ? "bg-blue-400 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-              >
-                H2
-              </button>
-              <button
-                type="button"
-                className={`px-3 py-1 rounded-md ${
-                  editor?.isActive("heading", { level: 3 }) ? "bg-blue-400 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-              >
-                H3
-              </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded-md ${
+                      editor?.isActive("heading", { level: 1 })
+                        ? "bg-blue-400 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() =>
+                      editor.chain().focus().toggleHeading({ level: 1 }).run()
+                    }
+                  >
+                    H1
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded-md ${
+                      editor?.isActive("heading", { level: 2 })
+                        ? "bg-blue-400 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() =>
+                      editor.chain().focus().toggleHeading({ level: 2 }).run()
+                    }
+                  >
+                    H2
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded-md ${
+                      editor?.isActive("heading", { level: 3 })
+                        ? "bg-blue-400 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() =>
+                      editor.chain().focus().toggleHeading({ level: 3 }).run()
+                    }
+                  >
+                    H3
+                  </button>
 
-              <button
-                type="button"
-                className={`px-3 py-1 rounded-md ${
-                  editor?.isActive("bulletList") ? "bg-blue-400 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-              >
-                • Bullet List
-              </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded-md ${
+                      editor?.isActive("bulletList")
+                        ? "bg-blue-400 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() =>
+                      editor.chain().focus().toggleBulletList().run()
+                    }
+                  >
+                    • Bullet List
+                  </button>
 
-              <button
-                type="button"
-                className={`px-3 py-1 rounded-md ${
-                  editor?.isActive("orderedList") ? "bg-blue-400 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-              >
-                1,2,3 List
-              </button>
-            </div>
+                  <button
+                    type="button"
+                    className={`px-3 py-1 rounded-md ${
+                      editor?.isActive("orderedList")
+                        ? "bg-blue-400 text-white"
+                        : "bg-gray-200"
+                    }`}
+                    onClick={() =>
+                      editor.chain().focus().toggleOrderedList().run()
+                    }
+                  >
+                    1,2,3 List
+                  </button>
+                </div>
 
-            {/* TipTap Editor Content */}
-            {editor && <EditorContent editor={editor} className="border p-3 min-h-[200px]" />}
-
-          </div>
-
-
-
-
-
-
+                {/* TipTap Editor Content */}
+                {editor && (
+                  <EditorContent
+                    editor={editor}
+                    className="border p-3 min-h-[200px]"
+                  />
+                )}
+              </div>
 
               <label
                 htmlFor="categories"
@@ -340,6 +399,15 @@ console.log("content: ",content)
                 className="lg:text-xl text-sm font-semibold lg:mt-4 mt-9 right-4 lg:absolute bottom-4 bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2 w-full lg:w-40"
               >
                 Post{" "}
+              </button>
+              <button
+                type="submit"
+                onClick={() => {
+                  setDraft(true);
+                }}
+                className="lg:text-xl text-sm font-semibold lg:mt-6 mt-9 right-45 lg:absolute bottom-4 bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2 w-full lg:w-60"
+              >
+                Save as draft
               </button>
             </form>
           </div>

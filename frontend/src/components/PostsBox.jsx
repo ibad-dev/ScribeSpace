@@ -9,8 +9,18 @@ import { backendUrl } from "../utils/backendURL.js";
 import Navbar from "../components/Navbar.jsx";
 import Followers from "../components/Followers.jsx";
 import Following from "../components/Following.jsx";
-function PostsBox() {
-  return <div>PostsBox</div>;
+function PostsBox({ userid }) {
+  console.log(userid);
+  return <div>
+
+  </div>;
 }
 
 export default PostsBox;
+
+
+
+
+
+
+

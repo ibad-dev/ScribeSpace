@@ -8,7 +8,7 @@ import {
   deleteFromCloudinary,
 } from '../utils/cloudinary.js';
 
-const createPost = asyncHandler(async (req, res) => {
+const createPostAndDraft = asyncHandler(async (req, res) => {
   const { title, content, categories } = req.body;
   const userid = req.user._id;
   const user = await User.findById(userid);
@@ -27,18 +27,60 @@ const createPost = asyncHandler(async (req, res) => {
     imageUrl = uploadedImage.url;
   }
 
-  const post = await Post.create({
-    title,
-    content,
-    author: user,
-    categories,
-    image: imageUrl,
-    published: true, // All posts start as drafts
-  });
+  try {
+    const post = await Post.create({
+      title,
+      content,
+      author: user,
+      categories,
+      image: imageUrl,
+      published: false, // All posts start as drafts
+    });
 
-  return res
-    .status(201)
-    .json(new ApiResponse(201, post, 'Post saved as draft successfully'));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, post, 'Post saved as draft successfully'));
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(400, 'Error to create & save post as draft');
+  }
+});
+const createPostAndPublish = asyncHandler(async (req, res) => {
+  const { title, content, categories } = req.body;
+  const userid = req.user._id;
+  const user = await User.findById(userid);
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  const localImagePath = req.file?.path;
+  let imageUrl = null;
+
+  if (localImagePath) {
+    const uploadedImage = await uploadOnCloudinary(localImagePath);
+    if (!uploadedImage) {
+      throw new ApiError(400, 'Failed to upload image');
+    }
+    imageUrl = uploadedImage.url;
+  }
+
+  try {
+    const post = await Post.create({
+      title,
+      content,
+      author: user,
+      categories,
+      image: imageUrl,
+      published: true, // All posts start as drafts
+    });
+
+    return res
+      .status(201)
+      .json(new ApiResponse(201, post, 'Post Published successfully'));
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(400, 'Error to create & Piblish post ');
+  }
 });
 
 const updatePost = asyncHandler(async (req, res) => {
@@ -187,10 +229,4 @@ const publishPost = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, post, 'Post published successfully'));
 });
 
-export {
-  createPost,
-  updatePost,
-  deletePost,
-  getPublishedPostsByUser,
-  publishPost,
-};
+export { updatePost, deletePost, createPostAndDraft, createPostAndPublish, getPublishedPostsByUser, publishPost };

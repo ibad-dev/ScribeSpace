@@ -19,6 +19,7 @@ import Posts from "./pages/Posts.jsx";
 import Blogs from "./pages/Blogs.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
