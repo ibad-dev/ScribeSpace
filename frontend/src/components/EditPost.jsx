@@ -12,11 +12,11 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 import Heading from "@tiptap/extension-heading";
-function Posts() {
+function EditPost() {
   const navigate = useNavigate();
-  const [IsLoading, SetIsLoading] = useState(true);
   const { isLoading, isLoggedIn, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const { postData } = useSelector((state) => state.posts);
 
   const token = localStorage.getItem("access_token");
   useEffect(() => {
@@ -62,54 +62,34 @@ function Posts() {
       showToast("error", "Please fill in all required fields.");
       return;
     }
-
+    const id = postData.data.details._id;
     if (image) {
       // If an image is selected, call the image upload method
-      await handleImageUpload(image);
+      await handleImageUpload(image, id);
     } else {
       // Otherwise, post the blog without an image
-      await postBlog();
+      await postBlog(id);
     }
   };
 
-  const postBlog = async () => {
+  const postBlog = async (id) => {
     try {
-      if (draft === false) {
-        const response = await axios.post(
-          `
-        ${backendUrl}/posts/create-post/publish`,
-          {
-            categories: tags,
-            title,
-            content,
-          },
-          { withCredentials: true }
-        );
+      const response = await axios.patch(
+        `
+        ${backendUrl}/posts/update-post/${id}`,
+        {
+          categories: tags,
+          title,
+          content,
+        },
+        { withCredentials: true }
+      );
 
-        if (response) {
-          showToast("success", response.data.message);
-          navigate("/profile");
-        } else {
-          showToast("error", response.data.message);
-        }
+      if (response) {
+        showToast("success", response.data.message);
+        navigate("/profile");
       } else {
-        const response = await axios.post(
-          `
-            ${backendUrl}/posts/create-post/save-as-draft`,
-          {
-            categories: tags,
-            title,
-            content,
-          },
-          { withCredentials: true }
-        );
-
-        if (response) {
-          showToast("success", response.data.message);
-          navigate("/profile");
-        } else {
-          showToast("error", response.data.message);
-        }
+        showToast("error", response.data.message);
       }
     } catch (error) {
       console.error(error);
@@ -117,7 +97,7 @@ function Posts() {
     }
   };
 
-  const handleImageUpload = async (image) => {
+  const handleImageUpload = async (image, id) => {
     if (!image) {
       showToast("error", "Please select an image");
       return;
@@ -130,42 +110,22 @@ function Posts() {
     formData.append("content", content);
 
     try {
-      if (draft === false) {
-        const response = await axios.post(
-          `
-        ${backendUrl}/posts/create-post/publish`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        if (response) {
-          showToast("success", response.data.message);
-          navigate("/profile");
-        } else {
-          showToast("error", response.data.message);
+      const response = await axios.patch(
+        `
+        ${backendUrl}/posts/update-post/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
+      );
+      if (response) {
+        showToast("success", response.data.message);
+        navigate("/profile");
       } else {
-        const response = await axios.post(
-          `
-        ${backendUrl}/posts/create-post/save-as-draft`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        if (response) {
-          showToast("success", response.data.message);
-          navigate("/profile");
-        } else {
-          showToast("error", response.data.message);
-        }
+        showToast("error", response.data.message);
       }
     } catch (error) {
       console.error(error);
@@ -181,7 +141,7 @@ function Posts() {
       ListItem,
       Heading.configure({ levels: [1, 2, 3] }), // Allow H1, H2, H3
     ],
-    content: "",
+    content: content || "",
     editorProps: {
       attributes: {
         class: "outline-none focus:ring-0 min-h-[200px] p-3", // Ensure focus styling
@@ -191,26 +151,26 @@ function Posts() {
       setContent(editor.getHTML());
     },
   });
+  useEffect(() => {
+    if (postData) {
+      console.log("POSTDATA: ", postData.data.details);
+      console.log("POSTDATA CONTENT: ", content);
 
+      setTitle(postData.data.details.title || "");
+      setContent(postData.data.details.content || "");
+      setTags(postData.data.details.categories || []);
+      // If using image in postData, you'd need to handle that here
+
+      // Update the editor's content manually
+      if (editor) {
+        editor.commands.setContent(postData.data.details.content || "");
+      }
+    } else {
+      console.log("Nothing");
+    }
+  }, [postData, editor]);
   return (
     <>
-      <h1 className="lg:text-4xl font-semibold text-blue-800 text-2xl my-2 text-center">
-        Write a New Post
-      </h1>
-      {isLoggedIn === false && (
-        <div className="relative mx-auto p-10  border-2 h-[45vh] shodow-md">
-          <h1 className="lg:text-3xl text-xl font-semibold tracking-tighter">
-            Please Create Account first to write something
-          </h1>
-          <button
-            onClick={() => navigate("/sign-up")}
-            className="outline-none bg-blue-600 hover:bg-blue-800 font-semibold lg:text-2xl text-xl w-70 rounded-lg  p-3 mt-10 text-white"
-          >
-            Create Account
-          </button>
-        </div>
-      )}
-
       {isLoggedIn && (
         <div className="">
           <div className=" p-5 flex-col gap-y-3  tiptap lg:w-4xl relative">
@@ -334,10 +294,12 @@ function Posts() {
 
                 {/* TipTap Editor Content */}
                 {editor && (
-                  <EditorContent
-                    editor={editor}
-                    className="border p-3 min-h-[200px]"
-                  />
+                  <>
+                    <EditorContent
+                      editor={editor}
+                      className="border p-3  min-h-[200px]"
+                    />
+                  </>
                 )}
               </div>
 
@@ -399,16 +361,7 @@ function Posts() {
                 type="submit"
                 className="lg:text-xl text-sm font-semibold lg:mt-4 mt-9 right-4 lg:absolute bottom-4 bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2 w-full lg:w-40"
               >
-                {IsLoading === false ? "Posting" : "Post"}
-              </button>
-              <button
-                type="submit"
-                onClick={() => {
-                  setDraft(true);
-                }}
-                className="lg:text-xl text-sm font-semibold lg:mt-6 mt-9 right-45 lg:absolute bottom-4 bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer px-4 py-2 w-full lg:w-60"
-              >
-                {IsLoading === false ? "Saving" : "Save as draft"}
+                Save
               </button>
             </form>
           </div>
@@ -418,4 +371,4 @@ function Posts() {
   );
 }
 
-export default Posts;
+export default EditPost;

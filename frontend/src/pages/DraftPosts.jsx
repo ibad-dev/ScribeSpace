@@ -4,11 +4,12 @@ import { showToast } from "../utils/toast.js";
 import axios from "axios";
 import { backendUrl } from "../utils/backendURL.js";
 import { useNavigate } from "react-router-dom";
-
+import { postDetailById } from "../features/postSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 function DraftPosts() {
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
-
+  const dispatch = useDispatch();
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const publishPost = async (postId) => {
@@ -111,15 +112,36 @@ function DraftPosts() {
                 Explicabo amet sapiente debitis ab tempore unde laborum. Dolorem
                 ea corporis quod laborum esse?
               </h1>
-              <button
-                onClick={() => {
-                  publishPost(res._id);
-                }}
-                className="lg:text-xl text-sm mt-2 lg:hidden font-semibold   bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer py-2 w-32 "
-              >
-                Publish
-              </button>
+              <div className="flex lg:hidden gap-x-4">
+                {" "}
+                <button
+                  onClick={() => {
+                    publishPost(res._id);
+                  }}
+                className="lg:text-xl text-sm mt-2 lg:hidden block font-semibold mb-2  bg-blue-600 rounded-md  hover:bg-blue-700 text-white cursor-pointer py-2 w-40 "
+                >
+                  Publish
+                </button>
+                <button
+                  onClick={() => {
+                    dispatch(postDetailById(res._id));
+                    navigate("/edit-post");
+                  }}
+                  className="lg:text-xl text-sm mt-2 lg:hidden block font-semibold mb-2  bg-green-600 rounded-md  hover:bg-green-700 text-white cursor-pointer py-2 w-40 "
+                >
+                  Edit
+                </button>
+              </div>
               <div>
+                <button
+                  onClick={() => {
+                    dispatch(postDetailById(res._id));
+                    navigate("/edit-post");
+                  }}
+                  className="lg:text-xl text-sm mt-2 lg:block hidden font-semibold mb-2  bg-green-600 rounded-md  hover:bg-green-700 text-white cursor-pointer py-2 w-40 "
+                >
+                  Edit
+                </button>
                 <img
                   src={res.image}
                   className="lg:w-40 lg:h-40 hidden lg:block bg-center rounded-lg w-20 h-20"

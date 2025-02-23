@@ -7,6 +7,7 @@ import {
   createPostAndPublish,
   getSavedPostsByUser,
   publishPost,
+  getPostDetailById,
 } from '../controllers/post.controller.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 import { upload } from '../middlewares/multer.middleware.js';
@@ -30,4 +31,5 @@ router.delete('/delete-post/:id', verifyJWT, deletePost);
 router.get('/published-posts', verifyJWT, getPublishedPostsByUser);
 router.get('/saved-posts', verifyJWT, getSavedPostsByUser);
 router.post("/publish/:postId",verifyJWT,publishPost)
+router.get("/post-details/:postId",verifyJWT,getPostDetailById)
 export default router;

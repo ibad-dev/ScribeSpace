@@ -258,8 +258,16 @@ const publishPost = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, post, 'Post published successfully'));
 });
-
+const getPostDetailById = asyncHandler(async (req,res)=>{
+  const {postId} =req.params
+  const details = await Post.findById(postId)
+  if(!details){
+    throw new ApiError(404,"post details not found")
+  }
+  return res.status(200).json(new ApiResponse(200,{details}, "Post details fetched successfully"))
+})
 export {
+  getPostDetailById,
   updatePost,
   deletePost,
   createPostAndDraft,
