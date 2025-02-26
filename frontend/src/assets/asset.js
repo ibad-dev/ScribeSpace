@@ -5,6 +5,7 @@ import user from "./user.svg";
 import mail from "./mail_icon.svg";
 import phone from "./phone.svg"
 import location from "./location.svg"
+import remove from "./delete.svg"
 export const assets = {
   hamburger,
   location,
@@ -12,5 +13,6 @@ export const assets = {
   close,
   user,
   mail,
-  phone
+  phone,
+  remove
 };

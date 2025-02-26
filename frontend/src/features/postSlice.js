@@ -9,16 +9,10 @@ export const postDetailById = createAsyncThunk(
     try {
       const token = localStorage.getItem("access_token");
       const response = await axios.get(
-        `${backendUrl}/posts/post-details/${postId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${backendUrl}/posts/post-details/${postId}`
       );
-    
+
       return response.data;
-      
     } catch (error) {
       console.log("API Error:", error.response?.data || error.message);
       return rejectWithValue(

@@ -73,16 +73,16 @@ const deleteComment = asyncHandler(async (req, res) => {
 });
 
 const getCommentsByPost = asyncHandler(async (req, res) => {
+  console.log("RUN")
   const { postId } = req.params;
   const comments = await Comment.find({ post: postId }).populate(
     'author',
-    '-password -refreshToken '
+    ' username profileImage'
   );
-
+  
   if (!comments) {
     throw new ApiError(404, 'No comments found');
   }
-
   return res
     .status(200)
     .json(new ApiResponse(200, comments, 'Comments fetched successfully'));

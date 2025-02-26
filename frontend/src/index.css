@@ -6,7 +6,7 @@
     outline: none;
   }
 
-.tiptap{
+.tiptap, .content{
   font-family: "Poppins", serif;
   font-weight: 400;
   font-style: normal;
@@ -15,12 +15,12 @@
   h3 { font-size: 1.2em; font-weight: bold; }  
 }
 
-.ProseMirror ul {
+.ProseMirror ul, .content ul {
   list-style-type: disc; /* Bullet points */
   margin-left: 1.5rem;
 }
 
-.ProseMirror ol {
+.ProseMirror ol ,.content ol{
   list-style-type: decimal; /* Numbered list */
   margin-left: 1.5rem;
 }

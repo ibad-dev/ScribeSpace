@@ -615,7 +615,7 @@ const getFollowing = asyncHandler(async (req, res) => {
       )
     );
 });
-
+const checkFollow = asyncHandler(async (req, res) => {});
 export {
   registerUser,
   loginUser,

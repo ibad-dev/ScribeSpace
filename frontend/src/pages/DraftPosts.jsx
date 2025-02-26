@@ -80,9 +80,9 @@ function DraftPosts() {
                 onClick={() => navigate("/profile/published-blogs")}
               >
                 <div className="flex gap-x-12 items-center ">
-                  {res.author.profileImage !== "" ? (
+                  {res.author[0].profileImage !== "" ? (
                     <img
-                      src={res.author.profileImage}
+                      src={res.author[0].profileImage}
                       className="rounded-full bg-center lg:w-18 w-10"
                       alt="userImage"
                     />
@@ -94,7 +94,7 @@ function DraftPosts() {
                     />
                   )}
                   <h2 className="lg:text-2xl text-xl font-semibold">
-                    {res.author.username}
+                    {res.author[0].username}
                   </h2>
                 </div>
                 <h1 className="font-semibold hidden lg:block text-lg lg:text-2xl tracking-tighter">

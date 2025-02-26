@@ -90,7 +90,7 @@ function Navbar({ fromPost }) {
           </h1>
         </>
       )}
-      <ul className="hidden lg:flex text-2xl font-semibold  justify-center gap-9">
+      <ul className="hidden lg:flex text-2xl font-semibold  justify-center gap-7">
         <li className="list-none cursor-pointer  transition-all duration-75">
           <NavLink
             to="/"
@@ -125,6 +125,17 @@ function Navbar({ fromPost }) {
             }
           >
             Contact Us
+          </NavLink>
+        </li>
+        <li className="list-none cursor-pointer  transition-all duration-75">
+          <NavLink
+            to="/blogs"
+            className={({ isActive }) =>
+              `${
+                isActive ? "text-blue-700" : "text-gray-700"
+              } hover:text-blue-800 `
+            }
+          >Blogs
           </NavLink>
         </li>
       </ul>
@@ -299,6 +310,19 @@ function Navbar({ fromPost }) {
                       }
                     >
                       Contact Us
+                    </NavLink>
+                  </li>
+                  <li className="list-none cursor-pointer  transition-all duration-75">
+                    <NavLink
+                      to="/blogs"
+                      onClick={handleHamburger}
+                      className={({ isActive }) =>
+                        `${
+                          isActive ? "text-blue-700" : "text-gray-700"
+                        } hover:text-blue-800 `
+                      }
+                    >
+                      Blogs
                     </NavLink>
                   </li>
                 </ul>

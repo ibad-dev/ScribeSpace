@@ -260,12 +260,22 @@ const publishPost = asyncHandler(async (req, res) => {
 });
 const getPostDetailById = asyncHandler(async (req,res)=>{
   const {postId} =req.params
-  const details = await Post.findById(postId)
+  const details = await Post.findById(postId).populate("author","username profileImage")
   if(!details){
     throw new ApiError(404,"post details not found")
   }
+  
   return res.status(200).json(new ApiResponse(200,{details}, "Post details fetched successfully"))
 })
+const getAllPosts = asyncHandler(async (req, res) => {
+  try {
+    const posts = await Post.find({ published: true, }).populate('author', 'username profileImage');
+    return res.status(200).json(new ApiResponse(200, posts, "Posts fetched Successfully"));
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(404, "Error to fetch posts");
+  }
+});
 export {
   getPostDetailById,
   updatePost,
@@ -274,5 +284,6 @@ export {
   createPostAndPublish,
   getPublishedPostsByUser,
   publishPost,
-  getSavedPostsByUser
+  getSavedPostsByUser,
+  getAllPosts
 };

@@ -21,6 +21,7 @@ import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import PublishedBlogs from "./components/PublishedBlogs.jsx";
 import EditPost from "./components/EditPost.jsx";
+import ReadBlog from "./components/ReadBlog.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/edit-post" element={<EditPost/>}/>
+      <Route path="/read-blog" element={<ReadBlog/>}/>
     </Route>
   )
 );
