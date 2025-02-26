@@ -27,20 +27,19 @@ function ReadBlog() {
   }, [dispatch, isLoggedIn, user]);
   useEffect(() => {
     if (response?.data && user) {
-      console.log(user._id);
+      // console.log(user._id);
       const userId = response?.data?.details?.author[0]?._id;
       axios
         .get(`${backendUrl}/users/followers/${userId}`)
         .then((response) => {
           if (response.data) {
-            console.log(response.data);
+            // console.log(response.data);
             const followdata = response?.data?.data?.followers?.filter(
               (follower) => follower?._id === user._id
             );
 
-            console.log(followdata);
             if (followdata) {
-              console.log(followdata);
+              // console.log(followdata);
               setFollowText(true);
             }
           }
@@ -53,7 +52,7 @@ function ReadBlog() {
   useEffect(() => {
     if (response?.data) {
       const postid = response?.data?.details?._id;
-      console.log("POSTID: ", postid);
+      // console.log("POSTID: ", postid);
       axios
         .get(`${backendUrl}/likes`, {
           headers: {
@@ -61,11 +60,11 @@ function ReadBlog() {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           const likeData = response?.data?.data?.likes?.filter(
             (like) => like.post._id === postid
           );
-          console.log(likeData);
+          // console.log(likeData);
           if (likeData.length > 0) {
             setLikeText(true);
           }
@@ -158,7 +157,7 @@ function ReadBlog() {
       );
     }
   };
-  console.log("COMMENTS: ", comments);
+  // console.log("COMMENTS: ", comments);
   const updateComment = async (commentId) => {
     try {
       const { data } = await axios.patch(
@@ -263,6 +262,7 @@ function ReadBlog() {
             >
               {followText ? "Unfollow" : "Follow"}
             </span>
+            <span   className="font-semibold lg:text-2xl text-xl">Likes: {response?.data?.details?.likesCount}</span>
           </div>
 
           {/* Blog Title */}
@@ -339,7 +339,7 @@ function ReadBlog() {
                 </button>
               </form>
             )}
-            <h1 className="lg:text-3xl text-2xl font-semibold m-2">Comments</h1>
+            <h1 className="lg:text-3xl text-2xl font-semibold m-2">Comments: {response?.data?.details?.commentsCount}</h1>
             {comments &&
               comments.data &&
               comments?.data.map((comm) => (

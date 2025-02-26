@@ -73,7 +73,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 });
 
 const getCommentsByPost = asyncHandler(async (req, res) => {
-  console.log("RUN")
+ 
   const { postId } = req.params;
   const comments = await Comment.find({ post: postId }).populate(
     'author',
