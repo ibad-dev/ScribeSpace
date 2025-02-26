@@ -532,22 +532,27 @@ const toggleFollow = asyncHandler(async (req, res) => {
   const currentUser = req.user;
 
   if (userId === currentUser._id.toString()) {
-    throw new ApiError(400, 'You cannot follow yourself');
+    throw new ApiError(400, "You cannot follow yourself");
   }
 
   const userToFollow = await User.findById(userId);
   if (!userToFollow) {
-    throw new ApiError(404, 'User to follow not found');
+    throw new ApiError(404, "User to follow not found");
   }
 
+  let message = "Followed successfully";
+
   if (userToFollow.followers.includes(currentUser._id)) {
+    // Unfollow
     userToFollow.followers = userToFollow.followers.filter(
       (id) => id.toString() !== currentUser._id.toString()
     );
     currentUser.following = currentUser.following.filter(
       (id) => id.toString() !== userToFollow._id.toString()
     );
+    message = "Unfollowed successfully"; // Update message
   } else {
+    // Follow
     userToFollow.followers.push(currentUser._id);
     currentUser.following.push(userToFollow._id);
   }
@@ -557,15 +562,14 @@ const toggleFollow = asyncHandler(async (req, res) => {
 
   const followersCount = userToFollow.followers.length;
   const followingCount = currentUser.following.length;
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { followersCount, followingCount },
-        'Followed successfully'
-      )
-    );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { followersCount, followingCount },
+      message // Dynamically return Follow/Unfollow message
+    )
+  );
 });
 
 //method to get followers of a user :
