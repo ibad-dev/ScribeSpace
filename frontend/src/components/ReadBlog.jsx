@@ -254,15 +254,19 @@ function ReadBlog() {
             <h2 className="text-2xl font-semibold">
               {response?.data?.details?.author[0]?.username}
             </h2>
-            <span
-              onClick={() =>
-                handleFollow(response?.data?.details?.author[0]?._id)
-              }
-              className="font-semibold lg:text-2xl text-xl text-blue-700 cursor-pointer"
-            >
-              {followText ? "Unfollow" : "Follow"}
+            {user._id !== response?.data?.details?.author[0]?._id && (
+              <span
+                onClick={() =>
+                  handleFollow(response?.data?.details?.author[0]?._id)
+                }
+                className="font-semibold lg:text-2xl text-xl text-blue-700 cursor-pointer"
+              >
+                {followText ? "Unfollow" : "Follow"}
+              </span>
+            )}
+            <span className="font-semibold lg:text-2xl text-xl">
+              Likes: {response?.data?.details?.likesCount}
             </span>
-            <span   className="font-semibold lg:text-2xl text-xl">Likes: {response?.data?.details?.likesCount}</span>
           </div>
 
           {/* Blog Title */}
@@ -339,7 +343,9 @@ function ReadBlog() {
                 </button>
               </form>
             )}
-            <h1 className="lg:text-3xl text-2xl font-semibold m-2">Comments: {response?.data?.details?.commentsCount}</h1>
+            <h1 className="lg:text-3xl text-2xl font-semibold m-2">
+              Comments: {response?.data?.details?.commentsCount}
+            </h1>
             {comments &&
               comments.data &&
               comments?.data.map((comm) => (

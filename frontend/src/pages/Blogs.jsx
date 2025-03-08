@@ -22,18 +22,22 @@ export default function Blogs() {
   }, []);
 
   let uniqueCategories = [];
-  if (posts && posts.data) {
+  if (posts?.data) {
     uniqueCategories = Array.from(
       new Set(
-        posts.data.flatMap((post) =>
-          post.categories
-            .flatMap((category) => category.split(",").map((cat) => cat.trim())) // Split & trim spaces
-            .filter((cat) => cat) // Remove empty strings
-        )
+        posts?.data
+          ?.flatMap((post) =>
+            [...post.categories].map((category) => {
+              try {
+                return JSON.parse(category).map((cat) => cat.trim()); // Parse properly
+              } catch (error) {
+                return category.replace(/[\[\]"]/g, "").trim(); // Fallback: Clean brackets & quotes
+              }
+            })
+          )
+          .flat() // Flatten the nested arrays
       )
     );
-    
-    console.log("CATE", uniqueCategories);
   }
   console.log("RES:==== ", posts);
   // console.log("RESDATA: ", response.posts);
@@ -126,31 +130,30 @@ export default function Blogs() {
                 {res.title}
               </h1>
               <button
+                onClick={() => {
+                  dispatch(postDetailById(res._id));
+                  navigate("/read-blog");
+                }}
+                className="bg-green-500 hover:bg-green-600 m-2 lg:hidden rounded-md cursor-pointer py-1 px-2   font-semibold text-xl"
+              >
+                View
+              </button>
+              <div className="lg:flex flex-col hidden">
+                <img
+                  src={res.image}
+                  className="lg:w-40 lg:h-40 hidden lg:block bg-center rounded-lg w-20 h-20"
+                  alt=""
+                />
+                <button
                   onClick={() => {
                     dispatch(postDetailById(res._id));
                     navigate("/read-blog");
                   }}
-                  className="bg-green-500 hover:bg-green-600 m-2 lg:hidden rounded-md cursor-pointer py-1 px-2   font-semibold text-xl"
+                  className="bg-green-500 hover:bg-green-600 m-2 lg:block hidden rounded-md cursor-pointer py-1 px-4   font-semibold text-xl"
                 >
                   View
                 </button>
-                <div className="lg:flex flex-col hidden">
-                  <img
-                    src={res.image}
-                    className="lg:w-40 lg:h-40 hidden lg:block bg-center rounded-lg w-20 h-20"
-                    alt=""
-                  />
-                  <button
-                    onClick={() => {
-                    dispatch(postDetailById(res._id));
-                      navigate("/read-blog");
-                    }}
-                    className="bg-green-500 hover:bg-green-600 m-2 lg:block hidden rounded-md cursor-pointer py-1 px-4   font-semibold text-xl"
-                  >
-                    View
-                  </button>
-                </div>
-              
+              </div>
             </div>
           ))}
         </div>
@@ -219,7 +222,7 @@ export default function Blogs() {
                   />
                   <button
                     onClick={() => {
-                    dispatch(postDetailById(res._id));
+                      dispatch(postDetailById(res._id));
                       navigate("/read-blog");
                     }}
                     className="bg-green-500 hover:bg-green-600 m-2 lg:block hidden rounded-md cursor-pointer py-1 px-4   font-semibold text-xl"
