@@ -26,10 +26,13 @@ export default function Blogs() {
     uniqueCategories = Array.from(
       new Set(
         posts.data.flatMap((post) =>
-          post.categories.flatMap((category) => category.split(","))
+          post.categories
+            .flatMap((category) => category.split(",").map((cat) => cat.trim())) // Split & trim spaces
+            .filter((cat) => cat) // Remove empty strings
         )
       )
     );
+    
     console.log("CATE", uniqueCategories);
   }
   console.log("RES:==== ", posts);

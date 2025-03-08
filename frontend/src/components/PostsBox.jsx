@@ -36,7 +36,26 @@ function PostsBox() {
 
   console.log("RES: ", response);
   // console.log("RESDATA: ", response.posts);
-
+  const handleDeletePosts = async (id) => {
+    try {
+      const { data } = await axios.delete(
+        `${backendUrl}/posts/delete-post/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data) {
+        showToast("success", data.messaga || "post deleted successfully");
+        fetchPublishedPosts()
+      } else {
+        showToast("success", data.messaga);
+      }
+    } catch (error) {
+      showToast("error", error.message || "error to delete post");
+    }
+  };
   return (
     <>
       {isLoading ? (
@@ -88,17 +107,23 @@ function PostsBox() {
                 />
               </div>
               <h1 className="font-semibold lg:hidden text-lg lg:text-2xl tracking-tighter">
-                {}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Explicabo amet sapiente debitis ab tempore unde laborum. Dolorem
-                ea corporis quod laborum esse?
+                {res.title}
               </h1>
 
-              <img
-                src={res.image}
-                className="lg:w-40 lg:h-40 hidden lg:block bg-center rounded-lg w-20 h-20"
-                alt=""
-              />
+              <div className="flex  flex-col">
+                {" "}
+                <img
+                  src={res.image}
+                  className="lg:w-40 lg:h-40 hidden lg:block bg-center rounded-lg w-20 h-20"
+                  alt=""
+                />
+                <button
+                  onClick={() => handleDeletePosts(res._id)}
+                  className="bg-red-600 hover:bg-red-700 text-xl lg:text-2xl text-white font-semibold rounded-lg my-2 lg:w-38 cursor-pointer w-28 py-1 px-2 "
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>

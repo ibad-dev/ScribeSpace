@@ -31,7 +31,7 @@ router.patch('/update-post/:id', verifyJWT, upload.single('image'), updatePost);
 router.delete('/delete-post/:id', verifyJWT, deletePost);
 router.get('/published-posts', verifyJWT, getPublishedPostsByUser);
 router.get('/saved-posts', verifyJWT, getSavedPostsByUser);
-router.post("/publish/:postId",verifyJWT,publishPost)
-router.get("/post-details/:postId",getPostDetailById)
-router.get("/get-all-posts",getAllPosts)
+router.post('/publish/:postId', verifyJWT, publishPost);
+router.get('/post-details/:postId', getPostDetailById);
+router.get('/get-all-posts', getAllPosts);
 export default router;
