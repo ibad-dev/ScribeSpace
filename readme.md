@@ -25,20 +25,20 @@ To set up ScribeSpace locally, follow these steps:
 
 1️⃣ **Clone the Repository**
 ```bash
-git clone https://github.com/your-username/scribespace.git
+git clone https://github.com/ibad-dev/scribespace.git
 cd scribespace
 ```
 
 2️⃣ **Install Dependencies**  
 **Backend**
 ```bash
-cd server
+cd backend
 npm install
 ```
 
 **Frontend**
 ```bash
-cd client
+cd frontend
 npm install
 ```
 
@@ -52,17 +52,16 @@ JWT_SECRET=your_jwt_secret_key
 4️⃣ **Run the Application**  
 **Start Backend**
 ```bash
-cd server
+cd backend
 npm start
 ```
 
 **Start Frontend**
 ```bash
-cd client
+cd frontend
 npm start
 ```
 
-The app will be available at `http://localhost:3000`.
 
 ## 📖 Usage
 - Sign up or log in to your account
@@ -71,8 +70,3 @@ The app will be available at `http://localhost:3000`.
 - Follow authors, like posts, and leave comments
 ```
 
-Note: Make sure to:
-1. Replace `your-username` in the clone URL with your actual GitHub username
-2. Add proper MongoDB connection string in the `.env` file
-3. Set a secure JWT secret key
-4. Update the URLs/ports if you're using different configurations
